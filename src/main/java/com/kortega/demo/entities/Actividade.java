@@ -3,7 +3,9 @@ package com.kortega.demo.entities;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_actividade")
@@ -16,7 +18,7 @@ public class Actividade {
 
     @Column(columnDefinition = "TEXT")
     private String descricao;
-    private String preco;
+    private Double preco;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
@@ -25,10 +27,16 @@ public class Actividade {
     @OneToMany(mappedBy = "actividade")
     List<Bloco> blocos = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "tb_atividade_participante",
+            joinColumns = @JoinColumn(name = "actividade_id"),
+            inverseJoinColumns = @JoinColumn(name = "participante_id"))
+    private Set<Participante> participantes = new HashSet<>();
+
     public Actividade() {
     }
 
-    public Actividade(Integer id, String nome, String descricao, String preco, Categoria categoria) {
+    public Actividade(Integer id, String nome, String descricao, Double preco, Categoria categoria) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -60,11 +68,11 @@ public class Actividade {
         this.descricao = descricao;
     }
 
-    public String getPreco() {
+    public Double getPreco() {
         return preco;
     }
 
-    public void setPreco(String preco) {
+    public void setPreco(Double preco) {
         this.preco = preco;
     }
 
@@ -78,5 +86,9 @@ public class Actividade {
 
     public List<Bloco> getBlocos() {
         return blocos;
+    }
+
+    public Set<Participante> getParticipantes() {
+        return participantes;
     }
 }
